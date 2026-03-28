@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JRS HTML Obfuscator - Fully Self‑Contained (No External Dependencies)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            padding: 1.5rem 2rem;
+            color: white;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .header h1 span {
+            color: #facc15;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        .content {
+            padding: 2rem;
+        }
+        .guide {
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid #3b82f6;
+            font-size: 0.9rem;
+            color: #1e293b;
+        }
+        .guide strong {
+            color: #1e40af;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #f8fafc;
+            resize: vertical;
+            height: 200px;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+            position: relative;
+        }
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .output-area {
+            margin-top: 2rem;
+            display: none;
+        }
+        #result {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            height: 250px;
+        }
+        .copy-btn {
+            background: #10b981;
+            margin-top: 1rem;
+        }
+        .copy-btn:hover {
+            background: #059669;
+        }
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #92400e;
+        }
+        .footer {
+            background: #f1f5f9;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #475569;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 10px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>JRS <span>HTML Obfuscator</span></h1>
+        <p>🔒 Military‑grade client‑side obfuscation | No external dependencies | Offline‑ready</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Developed by <strong>Md Jakariya Hasan</strong> | <a href="http://jakariya41jr.pro.bd/" target="_blank" style="color:#facc15;">Portfolio</a> | <a href="https://jakariya41jr.github.io/Personal-Project-Showcase/" target="_blank" style="color:#facc15;">Projects</a></p>
+    </div>
+
+    <div class="content">
+        <div class="guide">
+            📌 <strong>কীভাবে ব্যবহার করবেন:</strong> নিচের বক্সে আপনার সম্পূর্ণ HTML কোড পেস্ট করুন, তারপর <strong>"ওবফাস্কেট করুন"</strong> বাটন চাপুন। আউটপুটে একটি নতুন HTML কোড তৈরি হবে। এই কোডটি কপি করে <strong>.html</strong> ফাইল হিসেবে সেভ করুন এবং যেকোনো ব্রাউজারে খুলুন – আপনার মূল কন্টেন্ট স্বয়ংক্রিয়ভাবে দেখাবে।<br>
+            🛡️ <strong>সুরক্ষার স্তর:</strong> PBKDF2 (100,000 iterations) + AES‑GCM + XOR মাল্টি‑লেয়ার এনক্রিপশন, WebAssembly ট্র্যাপ, অ্যান্টি‑ডিবাগ, ফেক লেয়ার, টাইমিং র‍্যান্ডমাইজেশন – ফলে কোড রিভার্স ইঞ্জিনিয়ার করা অত্যন্ত কঠিন।<br>
+            ✅ <strong>গিটহাব / যেকোনো হোস্টে কাজ করে:</strong> আউটপুট ফাইলটি সম্পূর্ণ স্বয়ংসম্পূর্ণ, কোনো বাহ্যিক লাইব্রেরি প্রয়োজন নেই।
+        </div>
+
+        <div class="form-group">
+            <label>📄 আপনার HTML কোড লিখুন:</label>
+            <textarea id="inputCode" placeholder="এখানে আপনার HTML, CSS, JavaScript কোড পেস্ট করুন..."></textarea>
+        </div>
+
+        <button id="obfuscateBtn" onclick="obfuscateCode()">⚡ ওবফাস্কেট করুন</button>
+        <div id="errorMsg" class="error-message"></div>
+
+        <div class="output-area" id="outputArea">
+            <label>🔒 ওবফাস্কেটেড আউটপুট (HTML ফাইল):</label>
+            <textarea id="result" readonly></textarea>
+            <button class="copy-btn" onclick="copyCode()">📋 কপি করুন</button>
+            <div class="warning">
+                ⚠️ সতর্কতা: ওবফাস্কেট করা ফাইলটি শুধুমাত্র ব্রাউজারে খোলার জন্য। উৎস কোড রিভার্স ইঞ্জিনিয়ারিং অত্যন্ত কঠিন, তবে ১০০% অনিরাপদ নয়। এটি বাণিজ্যিক বা সংবেদনশীল ডেটার জন্য নয়।
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Developed by <strong>Md Jakariya Hasan</strong> | © 2025 JRS Security Suite | 
+        <a href="http://jakariya41jr.pro.bd/" target="_blank">Portfolio</a> | 
+        <a href="https://jakariya41jr.github.io/Personal-Project-Showcase/" target="_blank">Other Projects</a>
+    </div>
+</div>
+
+<script>
+    // ========== ENCRYPTION FUNCTIONS USING PBKDF2 (Web Crypto) ==========
+    // No external libraries needed!
+
+    function arrayBufferToBase64(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+        return btoa(binary);
+    }
+
+    function base64ToArrayBuffer(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes.buffer;
+    }
+
+    async function deriveKeyPBKDF2(password, salt, iterations = 100000) {
+        const encoder = new TextEncoder();
+        const passwordKey = await window.crypto.subtle.importKey(
+            'raw',
+            encoder.encode(password),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveKey']
+        );
+        return window.crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: salt,
+                iterations: iterations,
+                hash: 'SHA-256'
+            },
+            passwordKey,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        );
+    }
+
+    // For XOR layer we need a raw key (not a CryptoKey), so we derive a raw 32-byte string
+    async function deriveRawKeyPBKDF2(password, salt, iterations = 100000) {
+        const encoder = new TextEncoder();
+        const passwordKey = await window.crypto.subtle.importKey(
+            'raw',
+            encoder.encode(password),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveBits']
+        );
+        const keyBits = await window.crypto.subtle.deriveBits(
+            {
+                name: 'PBKDF2',
+                salt: salt,
+                iterations: iterations,
+                hash: 'SHA-256'
+            },
+            passwordKey,
+            256 // 32 bytes
+        );
+        return new Uint8Array(keyBits);
+    }
+
+    async function aesEncrypt(data, key) {
+        const iv = window.crypto.getRandomValues(new Uint8Array(12));
+        const encrypted = await window.crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            data
+        );
+        return { encrypted, iv };
+    }
+
+    async function xorLayerEncrypt(data, password, salt2) {
+        const keyBytes = await deriveRawKeyPBKDF2(password, salt2, 100000);
+        const dataBytes = new Uint8Array(data);
+        const result = new Uint8Array(dataBytes.length);
+        for (let i = 0; i < dataBytes.length; i++) {
+            result[i] = dataBytes[i] ^ keyBytes[i % keyBytes.length];
+        }
+        return result.buffer;
+    }
+
+    async function encryptFull(plainText, password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(plainText);
+        const salt1 = window.crypto.getRandomValues(new Uint8Array(16));
+        const key1 = await deriveKeyPBKDF2(password, salt1, 100000);
+        const { encrypted: aesEncrypted, iv } = await aesEncrypt(data, key1);
+        const salt2 = window.crypto.getRandomValues(new Uint8Array(16));
+        const xorEncrypted = await xorLayerEncrypt(aesEncrypted, password, salt2);
+        return {
+            salt1: arrayBufferToBase64(salt1),
+            salt2: arrayBufferToBase64(salt2),
+            iv: arrayBufferToBase64(iv),
+            encrypted: arrayBufferToBase64(xorEncrypted)
+        };
+    }
+
+    function generateRandomPassword() {
+        const bytes = window.crypto.getRandomValues(new Uint8Array(32));
+        return btoa(String.fromCharCode.apply(null, bytes));
+    }
+
+    function obfuscatePassword(password) {
+        const parts = [];
+        const chunkSize = Math.ceil(password.length / 4);
+        for (let i = 0; i < 4; i++) {
+            parts.push(password.substr(i * chunkSize, chunkSize));
+        }
+        const reversedParts = parts.map(p => p.split('').reverse().join(''));
+        const mask = Math.floor(Math.random() * 256);
+        const maskedParts = reversedParts.map(p => {
+            let masked = '';
+            for (let i = 0; i < p.length; i++) {
+                masked += String.fromCharCode(p.charCodeAt(i) ^ mask);
+            }
+            return masked;
+        });
+        return { parts: maskedParts, mask };
+    }
+
+    function generateObfuscatedHTML(encryptedData, salt1Base64, salt2Base64, ivBase64, password) {
+        const obf = obfuscatePassword(password);
+        const wasmBase64 = "AGFzbQEAAAABCAFgAn9/AX8DAQIABw0BAXhvcmlvcl9jaGVja3N1bQAACgwBAQoAIAAgAUEAEAAL";
+
+        const script = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>🔒 Protected Page</title><style>body{font-family:sans-serif;text-align:center;margin-top:50px;}</style></head>
+<body>
+<div id="content"></div>
+<script>
+    (function() {
+        function detectDevTools() {
+            let devToolsOpen = false;
+            const element = new Image();
+            Object.defineProperty(element, 'id', { get: function() { devToolsOpen = true; throw new Error('DevTools'); } });
+            console.log('%c', element);
+            let start = performance.now(); debugger; let end = performance.now();
+            if (end - start > 100) devToolsOpen = true;
+            if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) devToolsOpen = true;
+            return devToolsOpen;
+        }
+        function antiDebugTrap() {
+            if (detectDevTools()) {
+                document.getElementById('content').innerHTML = "<div style='color:red;'><h2>⚠️ SECURITY ALERT</h2><p>Debugging tools detected. Content destroyed.</p></div>";
+                throw new Error("Debugging detected");
+            }
+        }
+
+        const pwdParts = ${JSON.stringify(obf.parts)};
+        const pwdMask = ${obf.mask};
+        function getPassword() {
+            let reversed = pwdParts.map(part => {
+                let original = '';
+                for (let i = 0; i < part.length; i++) original += String.fromCharCode(part.charCodeAt(i) ^ pwdMask);
+                return original;
+            });
+            return reversed.map(s => s.split('').reverse().join('')).join('');
+        }
+
+        async function fakeLayer1(pwd) {
+            const dummySalt = new Uint8Array(16);
+            await deriveRawKeyPBKDF2(pwd, dummySalt, 10000);
+            antiDebugTrap();
+        }
+        async function fakeLayer2(pwd) {
+            const dummySalt = new Uint8Array(16);
+            await deriveRawKeyPBKDF2(pwd, dummySalt, 10000);
+            antiDebugTrap();
+        }
+
+        async function loadPart() {
+            await new Promise(r => setTimeout(r, 50 + Math.random() * 100));
+            antiDebugTrap();
+        }
+
+        let wasmInstance = null;
+        async function initWasm() {
+            const wasmBinary = Uint8Array.from(atob("${wasmBase64}"), c => c.charCodeAt(0));
+            const wasmModule = await WebAssembly.compile(wasmBinary);
+            const instance = await WebAssembly.instantiate(wasmModule);
+            wasmInstance = instance;
+        }
+        function xorChecksum(data) {
+            if (!wasmInstance) throw new Error("WASM not loaded");
+            const bytes = new Uint8Array(data);
+            const memory = new Uint8Array(wasmInstance.exports.memory.buffer);
+            memory.set(bytes, 0);
+            return wasmInstance.exports.xor_checksum(0, bytes.length);
+        }
+
+        async function decryptFull(pwd) {
+            antiDebugTrap();
+            await fakeLayer1(pwd);
+            await fakeLayer2(pwd);
+            await loadPart();
+            await new Promise(r => setTimeout(r, Math.random() * 200 + 50));
+
+            const encBuf = base64ToArrayBuffer("${encryptedData}");
+            const salt1Buf = base64ToArrayBuffer("${salt1Base64}");
+            const salt2Buf = base64ToArrayBuffer("${salt2Base64}");
+            const ivBuf = base64ToArrayBuffer("${ivBase64}");
+
+            const afterXor = await xorLayerDecrypt(encBuf, pwd, salt2Buf);
+            const key1 = await deriveKeyPBKDF2(pwd, salt1Buf, 100000);
+            const aesDecrypted = await aesDecrypt(afterXor, key1, new Uint8Array(ivBuf));
+            const decoded = new TextDecoder().decode(aesDecrypted);
+            xorChecksum(aesDecrypted);
+            return decoded;
+        }
+
+        function base64ToArrayBuffer(base64) {
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return bytes.buffer;
+        }
+
+        async function deriveKeyPBKDF2(password, salt, iterations) {
+            const encoder = new TextEncoder();
+            const passwordKey = await window.crypto.subtle.importKey(
+                'raw', encoder.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']
+            );
+            return window.crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: salt, iterations: iterations, hash: 'SHA-256' },
+                passwordKey,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['decrypt']
+            );
+        }
+
+        async function deriveRawKeyPBKDF2(password, salt, iterations) {
+            const encoder = new TextEncoder();
+            const passwordKey = await window.crypto.subtle.importKey(
+                'raw', encoder.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']
+            );
+            const bits = await window.crypto.subtle.deriveBits(
+                { name: 'PBKDF2', salt: salt, iterations: iterations, hash: 'SHA-256' },
+                passwordKey,
+                256
+            );
+            return new Uint8Array(bits);
+        }
+
+        async function xorLayerDecrypt(encrypted, password, saltBase64) {
+            const salt = base64ToArrayBuffer(saltBase64);
+            const keyBytes = await deriveRawKeyPBKDF2(password, new Uint8Array(salt), 100000);
+            const encryptedBytes = new Uint8Array(encrypted);
+            const result = new Uint8Array(encryptedBytes.length);
+            for (let i = 0; i < encryptedBytes.length; i++) {
+                result[i] = encryptedBytes[i] ^ keyBytes[i % keyBytes.length];
+            }
+            return result.buffer;
+        }
+
+        async function aesDecrypt(encrypted, key, iv) {
+            return window.crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                encrypted
+            );
+        }
+
+        (async () => {
+            try {
+                await initWasm();
+                const password = getPassword();
+                const html = await decryptFull(password);
+                document.getElementById('content').innerHTML = html;
+            } catch(e) {
+                document.getElementById('content').innerHTML = "<div><h2>Error</h2><p>Failed to load content.</p></div>";
+                console.error(e);
+            }
+        })();
+    })();
+<\/script>
+</body>
+</html>`;
+        return script;
+    }
+
+    async function obfuscateCode() {
+        const input = document.getElementById('inputCode').value;
+        if (!input) {
+            alert("❌ অনুগ্রহ করে HTML কোড দিন!");
+            return;
+        }
+
+        const btn = document.getElementById('obfuscateBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> ওবফাস্কেটিং...';
+        btn.disabled = true;
+        document.getElementById('errorMsg').style.display = 'none';
+
+        try {
+            const password = generateRandomPassword();
+            const { encrypted, salt1, salt2, iv } = await encryptFull(input, password);
+            const finalHTML = generateObfuscatedHTML(encrypted, salt1, salt2, iv, password);
+
+            document.getElementById('result').value = finalHTML;
+            document.getElementById('outputArea').style.display = 'block';
+        } catch (e) {
+            console.error(e);
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = "ওবফাস্কেশন ব্যর্থ: " + (e.message || "অজানা ত্রুটি");
+            errorDiv.style.display = 'block';
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    function copyCode() {
+        const resultText = document.getElementById('result');
+        resultText.select();
+        document.execCommand('copy');
+        alert("✅ কোড কপি করা হয়েছে!");
+    }
+</script>
+</body>
+</html>
